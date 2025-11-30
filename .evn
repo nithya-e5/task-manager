@@ -1,0 +1,2 @@
+SECRET_KEY=change_this_secret_to_a_random_string
+DATABASE_URL=mysql+mysqlconnector://root:@localhost/task_manager

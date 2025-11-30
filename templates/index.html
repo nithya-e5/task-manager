@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Your Tasks</h2>
+
+  <form action="{{ url_for('create_task') }}" method="post">
+    <input name="title" placeholder="Task title" required>
+    <input name="description" placeholder="Description">
+    <button type="submit">Add Task</button>
+  </form>
+
+  <ul>
+    {% for t in tasks %}
+      <li>
+        <strong {% if t.status == 'done' %}style="text-decoration:line-through"{% endif %}>{{ t.title }}</strong>
+        - {{ t.description }}
+        <form action="{{ url_for('toggle_task', task_id=t.id) }}" method="post" style="display:inline">
+          <button type="submit">{% if t.status == 'done' %}Mark Pending{% else %}Mark Done{% endif %}</button>
+        </form>
+        <form action="{{ url_for('delete_task', task_id=t.id) }}" method="post" style="display:inline">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+    {% else %}
+      <li>No tasks yet — add one!</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

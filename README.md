@@ -28,3 +28,4 @@ A full-stack task manager with user login, CRUD tasks, and MySQL database built 
 - Signup / Login
 - Add / Edit / Delete tasks
 - Mark task done/pending
+<img width="1619" height="980" alt="Screenshot 2025-12-01 174541" src="https://github.com/user-attachments/assets/d1bdab32-ff18-45f4-8261-2b859981a3c3" />

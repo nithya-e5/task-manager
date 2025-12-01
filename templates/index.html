@@ -1,27 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Your Tasks</h2>
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="h1">Your Tasks</div>
+      <div class="hint">Manage your daily tasks — create, mark done, edit, or delete.</div>
+    </div>
+    <div class="small">Logged in as <strong>{{ current_user.name }}</strong></div>
+  </div>
 
-  <form action="{{ url_for('create_task') }}" method="post">
-    <input name="title" placeholder="Task title" required>
-    <input name="description" placeholder="Description">
-    <button type="submit">Add Task</button>
-  </form>
+  <div class="card-body">
+    <form action="{{ url_for('create_task') }}" method="post" class="form-row" style="margin-bottom:12px;">
+      <input class="input" name="title" placeholder="Task title" required>
+      <input class="input" name="description" placeholder="Description (optional)">
+      <button class="btn btn-primary" type="submit">Add Task</button>
+    </form>
 
-  <ul>
-    {% for t in tasks %}
-      <li>
-        <strong {% if t.status == 'done' %}style="text-decoration:line-through"{% endif %}>{{ t.title }}</strong>
-        - {{ t.description }}
-        <form action="{{ url_for('toggle_task', task_id=t.id) }}" method="post" style="display:inline">
-          <button type="submit">{% if t.status == 'done' %}Mark Pending{% else %}Mark Done{% endif %}</button>
-        </form>
-        <form action="{{ url_for('delete_task', task_id=t.id) }}" method="post" style="display:inline">
-          <button type="submit">Delete</button>
-        </form>
-      </li>
-    {% else %}
-      <li>No tasks yet — add one!</li>
-    {% endfor %}
-  </ul>
+    <div class="tasks">
+      {% for t in tasks %}
+        <div class="task {% if t.status == 'done' %}done{% endif %}">
+          <div class="meta">
+            <div class="title">{{ t.title }}</div>
+            {% if t.description %}
+              <div class="desc">{{ t.description }}</div>
+            {% endif %}
+            <div class="small">
+              Created: {{ t.created_at.strftime('%b %d, %Y %I:%M %p') }}
+            </div>
+          </div>
+
+          <div class="controls">
+
+            <!-- ⭐ NEW: EDIT BUTTON -->
+            <a href="{{ url_for('edit_task', task_id=t.id) }}" class="btn btn-ghost">Edit</a>
+
+            <form action="{{ url_for('toggle_task', task_id=t.id) }}" method="post">
+              <button class="btn btn-ghost" type="submit">
+                {% if t.status == 'done' %}Mark Pending{% else %}Mark Done{% endif %}
+              </button>
+            </form>
+
+            <form action="{{ url_for('delete_task', task_id=t.id) }}" method="post"
+                  onsubmit="return confirm('Delete this task?');">
+              <button class="btn btn-ghost" type="submit">Delete</button>
+            </form>
+
+          </div>
+        </div>
+      {% else %}
+        <div class="small">No tasks yet — add one using the form above.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}
+

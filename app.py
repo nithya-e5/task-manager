@@ -31,9 +31,11 @@ def signup():
         name = request.form['name'].strip()
         email = request.form['email'].strip().lower()
         password = request.form['password']
+
         if User.query.filter_by(email=email).first():
             flash('Email already registered','warning')
             return redirect(url_for('signup'))
+
         user = User(name=name, email=email)
         user.set_password(password)
         db.session.add(user)
@@ -47,12 +49,15 @@ def login():
     if request.method == 'POST':
         email = request.form['email'].strip().lower()
         password = request.form['password']
+
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('dashboard'))
+
         flash('Invalid credentials','danger')
         return redirect(url_for('login'))
+
     return render_template('login.html')
 
 @app.route('/logout')
@@ -66,21 +71,25 @@ def logout():
 def create_task():
     title = request.form.get('title','').strip()
     desc = request.form.get('description','').strip()
+
     if not title:
         flash('Title required','warning')
     else:
         task = Task(user_id=current_user.id, title=title, description=desc)
         db.session.add(task)
         db.session.commit()
+
     return redirect(url_for('dashboard'))
 
 @app.route('/task/<int:task_id>/delete', methods=['POST'])
 @login_required
 def delete_task(task_id):
     task = Task.query.get_or_404(task_id)
+
     if task.user_id != current_user.id:
         flash('Not allowed','danger')
         return redirect(url_for('dashboard'))
+
     db.session.delete(task)
     db.session.commit()
     return redirect(url_for('dashboard'))
@@ -89,12 +98,44 @@ def delete_task(task_id):
 @login_required
 def toggle_task(task_id):
     task = Task.query.get_or_404(task_id)
+
     if task.user_id != current_user.id:
         flash('Not allowed','danger')
         return redirect(url_for('dashboard'))
+
     task.status = 'done' if task.status == 'pending' else 'pending'
     db.session.commit()
     return redirect(url_for('dashboard'))
 
+
+# ⭐⭐⭐ NEW: EDIT TASK ROUTE ⭐⭐⭐
+@app.route('/task/<int:task_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_task(task_id):
+    task = Task.query.get_or_404(task_id)
+
+    # Only allow the owner to edit
+    if task.user_id != current_user.id:
+        flash("Unauthorized access.", "danger")
+        return redirect(url_for('dashboard'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        description = request.form.get('description', '').strip()
+
+        if not title:
+            flash("Title cannot be empty.", "danger")
+            return render_template('edit.html', task=task)
+
+        task.title = title
+        task.description = description
+        db.session.commit()
+        flash("Task updated successfully!", "success")
+        return redirect(url_for('dashboard'))
+
+    return render_template('edit.html', task=task)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+

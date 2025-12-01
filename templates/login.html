@@ -1,9 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    <input name="email" type="email" placeholder="Email" required>
-    <input name="password" type="password" placeholder="Password" required>
-    <button type="submit">Login</button>
+<div class="card" style="max-width:520px; margin:0 auto;">
+  <div class="card-header">
+    <div>
+      <div class="h1">Login</div>
+      <div class="hint">Welcome back — login to continue.</div>
+    </div>
+  </div>
+
+  <form method="post" style="display:flex; flex-direction:column; gap:12px;">
+    <input class="input" name="email" type="email" placeholder="Email" required>
+    <input class="input" name="password" type="password" placeholder="Password" required>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
+      <a href="{{ url_for('signup') }}" class="btn btn-ghost">Signup</a>
+      <button class="btn btn-primary" type="submit">Login</button>
+    </div>
   </form>
+</div>
 {% endblock %}

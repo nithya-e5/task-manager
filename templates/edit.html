@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:520px; margin:0 auto;">
+  <div class="card-header">
+    <div>
+      <div class="h1">Edit Task</div>
+      <div class="hint">Update your task details.</div>
+    </div>
+  </div>
+
+  <form method="post" style="display:flex; flex-direction:column; gap:12px;">
+
+    <input class="input" name="title" value="{{ task.title }}" required>
+
+    <input class="input" name="description" 
+           value="{{ task.description or '' }}" 
+           placeholder="Description (optional)">
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
+      <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save Changes</button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

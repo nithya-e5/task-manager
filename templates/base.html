@@ -1,20 +1,26 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Task Manager</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-  <nav>
-    {% if current_user.is_authenticated %}
-      <span>Hi, {{ current_user.name }}</span>
-      <a href="{{ url_for('logout') }}">Logout</a>
-    {% else %}
-      <a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('signup') }}">Signup</a>
-    {% endif %}
+  <nav class="topbar">
+    <div class="brand">TaskManager</div>
+    <div class="user-actions">
+      {% if current_user.is_authenticated %}
+        <span class="small">Hi, {{ current_user.name }}</span> &nbsp;
+        <a href="{{ url_for('logout') }}" class="small">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="small">Login</a> •
+        <a href="{{ url_for('signup') }}" class="small">Signup</a>
+      {% endif %}
+    </div>
   </nav>
-  <main>
+
+  <main class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <ul class="flashes">
@@ -24,7 +30,23 @@
         </ul>
       {% endif %}
     {% endwith %}
+
     {% block content %}{% endblock %}
   </main>
+
+  <!-- JS is included here -->
+  <script>
+    // Auto-hide flash messages
+    const flashes = document.querySelectorAll('.flashes li');
+    if (flashes.length) {
+      setTimeout(() => flashes.forEach(x => x.style.display = 'none'), 3500);
+    }
+
+    // Autofocus task title on dashboard
+    if (location.pathname === '/' || location.pathname === '/index.html') {
+      const el = document.querySelector('input[name="title"]');
+      if (el) el.focus();
+    }
+  </script>
 </body>
 </html>

@@ -1,4 +1,8 @@
-# Task Manager (Full-Stack - Flask + MySQL)
+# Task Manager (Full-Stack • Flask + MySQL)
+
+🔗 **Live Demo:** https://task-manager-production-d4d6.up.railway.app/
+
+A full-stack task manager with user login, CRUD tasks, and MySQL database built using Flask.
 
 ## Run locally (dev)
 1. Create virtual env:
